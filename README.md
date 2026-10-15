@@ -30,6 +30,8 @@ Page content and metadata are editable React JSX in `src/pages.jsx`. `src/compon
 
 Forms validate details and prepare an enquiry for the visitor to send through WhatsApp. No message is sent automatically, no bookings are confirmed, and no personal data is stored by this site. There is no email backend or payment processing. An email service can be added after the centre provides a verified email address and an approved delivery service.
 
+The home-page hero includes a compact stay enquiry card (`src/HomeHero.jsx`) with check-in, check-out, guests and room preference. It validates dates and opens a pre-filled WhatsApp message; a continuation link is provided if the browser blocks the new tab. Visitors send the message themselves in WhatsApp. The sticky navbar uses the reusable vector logo in `src/Logo.jsx`, with standalone artwork in `assets/logo.svg` and the matching favicon in `assets/favicon.svg`. Hero, logo and sticky header styles are in `src/booking.css`.
+
 ## Confirm before public launch
 
 - Telephone, street address, ownership statement and precise map pin.

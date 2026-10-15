@@ -35,10 +35,10 @@ export function BookingCard() {
   }
   return <aside className="booking-card" aria-labelledby="booking-title" id="plan-your-visit">
     <p className="eyebrow">Direct bookings</p>
-    <h2 id="booking-title">{purpose==='event'?'Bring your occasion to life.':'Make yourself at home.'}</h2>
+    <h2 id="booking-title">{purpose==='event'?'Book your event.':'Make yourself at home.'}</h2>
     <p className="booking-intro">{purpose==='event'?'A celebration, a conference, a retreat. Let’s find the right space for you.':'A quiet weekend or a room after the celebration. Tell us when you’re coming.'}</p>
     <div className="booking-purpose" role="group" aria-label="What would you like to book?">
-      {[['event','Plan an event'],['stay','Book a stay']].map(([value,text])=><button key={value} type="button" aria-pressed={purpose===value} onClick={()=>{setPurpose(value);setError('');setWhatsapp('');}}>{text}</button>)}
+      {[['event','Book your event'],['stay','Book a stay']].map(([value,text])=><button key={value} type="button" aria-pressed={purpose===value} onClick={()=>{setPurpose(value);setError('');setWhatsapp('');}}>{text}</button>)}
     </div>
     <form onSubmit={submit} className="quick-booking">
       <div className="booking-fields">

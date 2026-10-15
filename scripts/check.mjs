@@ -1,0 +1,5 @@
+import {readFile,access} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const routes=['','events','rooms','restaurant','pool','gallery','about','contact'];
+for(const slug of routes){const html=await readFile(`dist/${slug||'index'}.html`,'utf8');assert.equal((html.match(/<h1>/g)||[]).length,1,`${slug}: one h1`);assert(html.includes('name="description"'));assert(html.includes('id="root"'));assert(/<script type="module"[^>]*src="\/assets\//.test(html));assert(!html.includes('/src/main.jsx'));for(const match of html.matchAll(/(?:href|src)="(\/[^"?#]*)/g)){const path=match[1];if(path.startsWith('/assets/'))await access('dist'+path);else assert(path==='/'||routes.includes(path.slice(1)),`${slug}: missing ${path}`);}assert(!/\[CONFIRM|\[PRICE|\[HALL/.test(html));}
+const config=JSON.parse(await readFile('vercel.json','utf8'));assert.equal(config.outputDirectory,'dist');assert.equal(config.cleanUrls,true);await access('dist/404.html');console.log('All eight pre-rendered React routes passed: production bundles, internal links, images, metadata and Vercel output configuration.');

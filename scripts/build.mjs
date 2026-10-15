@@ -2,6 +2,7 @@ import {build,createServer} from 'vite';
 import {readFile,writeFile} from 'node:fs/promises';
 import React from 'react';
 import {renderToString} from 'react-dom/server';
+import {googleRating} from '../src/content.js';
 await build();
 const server=await createServer({server:{middlewareMode:true},appType:'custom'});
 try{
@@ -15,7 +16,7 @@ for(const [slug,meta]of Object.entries(pageMeta)){
 const title=`${meta.title} – Jubilee Retreat & Conference Centre`;
 const content=renderToString(React.createElement(App,{pathname:'/'+slug}));
 const social=`<meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(meta.description)}"><meta property="og:site_name" content="Jubilee Retreat & Conference Centre"><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image">${origin?`<meta property="og:image" content="${origin}/assets/images/pool-sunset.jpg"><link rel="canonical" href="${origin}/${slug}">`:''}`;
-const schema={'@context':'https://schema.org','@type':['LodgingBusiness','EventVenue'],name:'Jubilee Retreat & Conference Centre',telephone:'+2348103150133',address:{'@type':'PostalAddress',streetAddress:'No. 5 Enerhen Road',addressLocality:'Effurun',addressRegion:'Delta State',addressCountry:'NG'}};
+const schema={'@context':'https://schema.org','@type':['LodgingBusiness','EventVenue'],name:'Jubilee Retreat & Conference Centre',telephone:'+2348103150133',address:{'@type':'PostalAddress',streetAddress:'No. 5 Enerhen Road',addressLocality:'Effurun',addressRegion:'Delta State',addressCountry:'NG'},aggregateRating:{'@type':'AggregateRating',ratingValue:googleRating.score,reviewCount:googleRating.count,bestRating:5}};
 const html=template.replace(/<title>.*?<\/title>/,`<title>${escape(title)}</title>`).replace(/<meta name="description"[^>]*>/,`<meta name="description" content="${escape(meta.description)}">`).replace('</head>',social+`<script type="application/ld+json">${JSON.stringify(schema)}</script></head>`).replace('<div id="root"></div>',`<div id="root">${content}</div>`).replace('<body>',`<body class="page-${slug||'home'}">`);
 await writeFile(`dist/${slug||'index'}.html`,html);
 }

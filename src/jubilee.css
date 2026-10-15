@@ -1,0 +1,94 @@
+/* Jubilee's final visual direction. Imported after the existing page styles. */
+:root{--serif:'Cormorant Garamond',Georgia,serif;--sans:'Source Sans 3',Arial,sans-serif}
+body{font-size:18px}
+h1,h2,h3{font-weight:600;text-wrap:balance}
+h1{font-size:66px;letter-spacing:-1px}h2{font-size:44px;letter-spacing:-.6px}h3{font-size:30px}
+.logo-type .brand-name{font-family:var(--serif);font-size:44px;letter-spacing:-1px;font-weight:600;line-height:.95}
+.logo-type .brand-sub{display:block;font-family:var(--sans);font-size:10px!important;letter-spacing:.11em;margin-top:10px;max-width:none}
+.logo-mark{width:44px;height:44px}.logo-lockup{gap:12px}
+.header-inner{gap:25px}.desktop-nav{gap:23px}.desktop-nav a{font-size:16px!important}
+.site-header{box-shadow:none}.header-inner>.button{font-size:16px!important}
+.section-label{display:flex;align-items:center;gap:12px;font-family:var(--sans);font-size:14px;font-weight:600;line-height:1.5;letter-spacing:.06em;color:#856724;text-transform:none;margin-bottom:22px}
+.section-label-number{font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.section-label-rule{width:45px;height:1px;flex:0 0 45px;background:var(--gold)}
+.event-feature .section-label,.final-cta .section-label,.with-photo .section-label{color:#e2c67b}
+.experience .section-label{margin-bottom:14px}.direct .section-label{justify-content:center}
+.experience.aqua .eyebrow{color:#856724}.experience.aqua .section-label{color:#856724}
+.page-pool .section-label{color:#44869c}.page-pool .with-photo .section-label{color:#acd6e4}
+.hero.hero-centered{min-height:720px;height:auto;padding:70px 0 250px;text-align:center}
+.hero-centered .hero-shade{background:rgba(26,39,68,.55)}
+.hero-centered>img{object-position:50% 55%}
+.centered-hero-content{max-width:850px}
+.hero-centered .eyebrow{color:#ead49a;font-size:14px!important;letter-spacing:.16em;margin-bottom:22px}
+.hero-centered h1{font-size:66px;line-height:1.06;letter-spacing:-.8px;margin:0 auto 23px;max-width:790px}
+.hero-centered h1 em{color:#e8cd85;font-weight:600}
+.hero-centered p.hero-sub{font-size:18px;line-height:1.7;color:#fff;margin-bottom:0}
+.hero-centered .button-row{justify-content:center;gap:16px;margin-top:28px}
+.hero-centered .button{min-height:48px;font-size:16px;padding:12px 26px}
+.booking-dock{position:relative;z-index:1;margin-top:-192px;padding-bottom:55px;isolation:isolate}
+.dock-layout{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:90px;align-items:start}
+.dock-intro{padding-top:240px;max-width:540px}.dock-intro h2{font-size:44px;margin-bottom:20px}.dock-intro>p:not(.section-label){font-size:16px;line-height:1.7;margin-bottom:15px}
+.booking-dock .booking-card{width:420px;max-width:100%;min-width:0;background:var(--paper);border-top:2px solid var(--gold);padding:26px 30px 32px;box-shadow:0 20px 50px rgba(26,39,68,.25);color:var(--navy);scroll-margin-top:125px}
+.booking-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-bottom:1px solid #d4cdbd;margin-bottom:23px}
+.booking-tabs button{background:transparent;border:0;border-bottom:2px solid transparent;color:#5a6272;font-family:var(--sans);font-size:15px;font-weight:500;line-height:1.3;min-height:50px;padding:8px 5px 12px;white-space:normal}
+.booking-tabs button[aria-selected=true]{border-bottom-color:var(--gold);color:var(--navy);font-weight:600}
+.booking-dock .booking-card h2{font-size:38px;line-height:1.1;letter-spacing:-.5px;color:var(--navy);margin:0 0 9px}
+.booking-dock .booking-intro{font-size:16px;line-height:1.5;color:#5b6370;margin:0 0 23px}
+.booking-dock .booking-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px}
+.booking-fields .booking-field-wide{grid-column:1/-1}
+.booking-dock .booking-fields label{display:flex;flex-direction:column;gap:8px;min-width:0;font-size:16px;line-height:1.4;font-weight:500;white-space:nowrap;color:var(--navy)}
+.booking-dock .booking-fields input,.booking-dock .booking-fields select{width:100%;min-width:0;max-width:100%;height:48px;min-height:48px;border:1px solid #c9c5ba;border-radius:0;font-family:var(--sans);font-size:16px;line-height:normal;padding:10px 12px;color:var(--navy);background:#fff;box-sizing:border-box;color-scheme:light}
+.booking-dock .booking-fields input[type=date]{appearance:none;-webkit-appearance:none;display:block;padding-right:9px}
+.booking-dock input[type=date]::-webkit-calendar-picker-indicator{margin-left:3px;padding:2px;flex:0 0 18px;width:18px;height:18px}
+.booking-dock input::-webkit-date-and-time-value{min-height:24px;text-align:left}
+.booking-dock .quick-booking>.button{margin-top:24px;min-height:48px;width:100%;font-size:16px;line-height:1.5}
+.booking-dock .booking-note{font-family:var(--sans);font-size:14px;line-height:1.6;color:#666c75;text-align:center;margin:16px 0 0}
+.booking-dock .booking-fallback{font-size:15px;line-height:1.6;margin:14px 0 0;color:#4a4f5c}
+.booking-dock .form-error{margin:15px 0 0;font-size:15px}
+.jubilee-trust{background:#eeece5;padding:25px 0}.jubilee-trust .container{display:grid;grid-template-columns:1fr 1.6fr 1fr 1fr;align-items:center}
+.jubilee-trust strong,.jubilee-trust span{font-family:var(--sans);font-size:16px!important;line-height:1.5}.jubilee-trust strong{font-weight:600}.jubilee-trust .container>:last-child{border:0}
+.welcome{padding-top:90px}.guest-reviews{background:#eeece5}.reviews-heading{display:flex;justify-content:space-between;gap:35px;align-items:center}.reviews-heading h2{margin-bottom:0}.reviews-heading .button{flex-shrink:0;font-size:16px}
+.google-rating{display:flex;align-items:center;gap:28px;border-top:1px solid #c9c1ad;margin-top:40px;padding-top:30px}.google-rating>strong{font-family:var(--serif);font-size:100px;font-weight:600;line-height:1;color:var(--navy)}.google-rating p{font-size:20px;color:var(--navy);margin:5px 0 0}.rating-scale{font-size:16px;color:#626977}.review-cards{margin-top:40px}.review-cards blockquote{border-top:1px solid var(--gold);margin:0;padding-top:25px}.review-cards cite{font-style:normal;font-size:16px;color:var(--navy)}
+.page-home .ornament{border:0;border-radius:0}.page-home .ornament img{width:52px;height:52px;object-fit:contain}
+footer{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}footer a{overflow-wrap:anywhere}
+@media(min-width:1151px) and (max-width:1250px){.desktop-nav{gap:16px}.header-inner{gap:20px}.logo-type .brand-name{font-size:41px}.logo-type .brand-sub{font-size:10px!important}}
+@media(max-width:1150px){.dock-layout{gap:55px}.dock-intro h2{font-size:40px}.hero-centered h1{font-size:66px}}
+@media(max-width:900px){
+  .hero.hero-centered{min-height:640px;padding:60px 0 125px}
+  .hero-centered h1{font-size:52px;max-width:650px}
+  .centered-hero-content{width:calc(100% - 40px);max-width:650px}
+  .booking-dock{margin-top:-48px;padding-bottom:35px}
+  .booking-dock .dock-layout{display:block;width:calc(100% - 32px);max-width:none}
+  .dock-intro{display:none}
+  .booking-dock .booking-card{width:100%;max-width:none;padding:24px 28px 32px;box-shadow:0 12px 30px #1a274420}
+  .booking-dock .booking-fields{grid-template-columns:minmax(0,1fr);gap:18px}
+  .booking-fields .booking-field-wide{grid-column:auto}
+  .booking-dock .booking-card h2{font-size:36px}
+  .booking-tabs button{font-size:16px;min-height:52px;padding:8px 6px 12px}
+  .jubilee-trust .container{grid-template-columns:1fr;gap:0;width:calc(100% - 48px)}
+  .jubilee-trust .container>div,.jubilee-trust .container>a{border:0;border-bottom:1px solid #d3cfc3;padding:14px 0;min-height:0}
+  .jubilee-trust .container>:last-child{border:0}.jubilee-trust strong,.jubilee-trust span{font-size:16px!important}.jubilee-trust span{display:inline;margin-left:5px}
+  .reviews-heading{display:block}.reviews-heading .button{margin-top:25px}.guest-reviews{padding:65px 0}
+}
+@media(max-width:640px){
+  body{font-size:18px}h1,.page-intro h1{font-size:42px}h2,.direct h2,.section-heading h2{font-size:30px}h3{font-size:28px}
+  .hero.hero-centered{min-height:640px;padding-top:58px}
+  .hero-centered h1{font-size:42px;line-height:1.1;letter-spacing:-.3px;max-width:370px}
+  .hero-centered .eyebrow{font-size:14px!important;letter-spacing:.1em;max-width:330px;margin:0 auto 23px}
+  .hero-centered p.hero-sub{font-size:17px;line-height:1.7}
+  .hero-centered .button-row{display:flex;gap:12px;margin-top:27px}
+  .hero-centered .button{font-size:16px;padding:12px 19px}
+  .hero-centered>img{object-position:55% center}
+  .booking-dock .booking-card{padding:21px 22px 32px}
+  .booking-dock .booking-tabs{margin-bottom:23px}
+  .booking-tabs button{font-size:15px;padding:8px 4px 12px}
+  .booking-dock .booking-card h2{font-size:36px}
+  .booking-dock .booking-intro{font-size:16px}
+  .booking-dock .booking-fields input,.booking-dock .booking-fields select{font-size:16px}
+  .section-label{font-size:14px;letter-spacing:.025em;gap:9px;margin-bottom:20px}.section-label-rule{width:30px;flex-basis:30px}
+  .section{padding:60px 0}.welcome{padding-top:60px}.experience h3{font-size:32px}
+  .google-rating{gap:22px}.google-rating>strong{font-size:88px}.google-rating p{font-size:18px}
+  .logo-type .brand-name{font-size:39px}.logo-type .brand-sub{font-size:10px!important;letter-spacing:.05em;white-space:normal;max-width:205px}.logo-mark{width:38px;height:38px}
+  footer{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
+}
+@media(max-width:360px){.hero-centered h1{font-size:39px}.hero-centered .button{padding:12px 14px;font-size:15px}.booking-dock .booking-card{padding-inline:17px}.booking-tabs button{font-size:14px}.logo-type .brand-sub{max-width:180px}}

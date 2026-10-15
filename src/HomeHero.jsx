@@ -1,75 +1,90 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {rooms} from './components.jsx';
+import {centreContact} from './content.js';
+import SectionLabel from './SectionLabel.jsx';
 
-function dateString(date) {
-  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
-}
+const tabs = [['event','Plan an Event'], ['room','Book a Room'], ['table','Reserve a Table']];
+const eventTypes = ['Wedding','Conference','Seminar or training','Corporate meeting','Birthday or anniversary','Other'];
+const localDate = date => `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+const initialDetails = {eventType:'Wedding',eventDate:'',eventGuests:'',checkIn:'',checkOut:'',roomGuests:'2',room:'Help me choose',tableDate:'',time:'',tableGuests:'2'};
 
 export function BookingCard() {
-  const [purpose,setPurpose]=useState('event');
-  const [eventDate,setEventDate]=useState('');
-  const [eventType,setEventType]=useState('Help me choose');
-  const [eventGuests,setEventGuests]=useState('');
-  const [extras,setExtras]=useState('Venue only');
-  const [today,setToday]=useState('');
-  const [checkIn,setCheckIn]=useState('');
-  const [checkOut,setCheckOut]=useState('');
-  const [guests,setGuests]=useState('2');
-  const [room,setRoom]=useState('Help me choose');
-  const [error,setError]=useState('');
-  const [whatsapp,setWhatsapp]=useState('');
-  useEffect(()=>setToday(dateString(new Date())),[]);
-  const nextDay=checkIn?dateString(new Date(new Date(checkIn+'T12:00:00').getTime()+86400000)):today;
+  const [active,setActive] = useState('event');
+  const [details,setDetails] = useState(initialDetails);
+  const [today,setToday] = useState('');
+  const [error,setError] = useState('');
+  const [whatsapp,setWhatsapp] = useState('');
+  const tabRefs = useRef([]);
+  useEffect(()=>setToday(localDate(new Date())),[]);
+
+  function update(name,value) {
+    setDetails(previous=>({...previous,[name]:value}));
+    setError('');
+    setWhatsapp('');
+  }
+  function chooseTab(id) { setActive(id); setError(''); setWhatsapp(''); }
+  function navigateTabs(event,index) {
+    const next = event.key==='ArrowRight' ? (index+1)%3 : event.key==='ArrowLeft' ? (index+2)%3 : event.key==='Home' ? 0 : event.key==='End' ? 2 : null;
+    if(next===null)return;
+    event.preventDefault(); chooseTab(tabs[next][0]); tabRefs.current[next]?.focus();
+  }
   function submit(event) {
     event.preventDefault();
-    if(purpose==='stay'&&(!checkIn||!checkOut||checkIn<today||checkOut<=checkIn)){setError('Choose a check-in date from today and a check-out date after your arrival.');return;}
-    if(purpose==='event'&&(!eventDate||eventDate<today||!Number.isInteger(Number(eventGuests))||Number(eventGuests)<1)){setError('Choose an upcoming date and tell us how many guests you expect.');return;}
-    setError('');
-    const format=value=>new Intl.DateTimeFormat('en-NG',{day:'numeric',month:'long',year:'numeric'}).format(new Date(value+'T12:00:00'));
-    const message=purpose==='event'
-      ? `Hello Jubilee, I’d like to plan an event.\n\nEvent: ${eventType}\nPreferred date: ${format(eventDate)}\nExpected guests: ${eventGuests}\nAlso needed: ${extras}\n\nPlease help me choose a suitable hall and share availability and a quote. Thank you.`
-      : `Hello Jubilee, I’d like to book a stay.\n\nCheck-in: ${format(checkIn)}\nCheck-out: ${format(checkOut)}\nGuests: ${guests}\nRoom preference: ${room}\n\nPlease confirm availability and current rates. Thank you.`;
-    const url='https://wa.me/2348103150133?text='+encodeURIComponent(message);
-    setWhatsapp(url);
+    const date = active==='event' ? details.eventDate : active==='room' ? details.checkIn : details.tableDate;
+    if(!date || date<today) { setError('Please choose a date from today onwards.'); return; }
+    if(active==='room' && (!details.checkOut || details.checkOut<=details.checkIn)) { setError('Please choose a check-out date after your check-in date.'); return; }
+    if(active==='event' && details.eventGuests && (!Number.isInteger(Number(details.eventGuests)) || Number(details.eventGuests)<1 || Number(details.eventGuests)>10000)) { setError('Please enter a valid number of guests.'); return; }
+    const format = value => value ? new Intl.DateTimeFormat('en-NG',{day:'numeric',month:'long',year:'numeric'}).format(new Date(value+'T12:00:00')) : '';
+    const heading = active==='event' ? "Hello, I'd like to plan an event at Jubilee." : active==='room' ? "Hello, I'd like to book a room at Jubilee." : "Hello, I'd like to reserve a table at Jubilee.";
+    const rows = active==='event' ? [['Event type',details.eventType],['Date',format(details.eventDate)],['Guests',details.eventGuests]] : active==='room' ? [['Check-in',format(details.checkIn)],['Check-out',format(details.checkOut)],['Guests',details.roomGuests],['Room',details.room]] : [['Date',format(details.tableDate)],['Time',details.time],['Guests',details.tableGuests]];
+    const message = heading+'\n\n'+rows.filter(([,value])=>value).map(([name,value])=>`${name}: ${value}`).join('\n')+'\n\nPlease confirm availability and rates. Thank you.';
+    const url = `https://wa.me/${centreContact.phone}?text=${encodeURIComponent(message)}`;
+    setError(''); setWhatsapp(url);
+    document.activeElement?.blur();
     window.open(url,'_blank','noopener,noreferrer');
   }
+  const nextDay = details.checkIn ? localDate(new Date(new Date(details.checkIn+'T12:00:00').getTime()+86400000)) : today;
+  const input = (name,label,type='text',options={}) => <label className={options.full?'booking-field-wide':undefined} htmlFor={'quick-'+name}>{label}<input id={'quick-'+name} name={name} type={type} value={details[name]} onChange={event=>update(name,event.target.value)} required={options.required} min={type==='date'?(options.min||today):type==='number'?1:undefined} max={type==='number'?10000:undefined} inputMode={type==='number'?'numeric':undefined} placeholder={type==='number'?'Guest count':undefined}/></label>;
+  const select = (name,label,options,full=false) => <label className={full?'booking-field-wide':undefined} htmlFor={'quick-'+name}>{label}<select id={'quick-'+name} name={name} value={details[name]} onChange={event=>update(name,event.target.value)}>{options.map(option=>{const [value,text]=Array.isArray(option)?option:[option,option];return <option key={value} value={value}>{text}</option>;})}</select></label>;
+  const guestOptions = [1,2,3,4,5,6].map(n=>[String(n),`${n} ${n===1?'guest':'guests'}`]).concat([['7+','7+ guests']]);
+
   return <aside className="booking-card" aria-labelledby="booking-title" id="plan-your-visit">
-    <p className="eyebrow">Direct bookings</p>
-    <h2 id="booking-title">{purpose==='event'?'Book your event.':'Make yourself at home.'}</h2>
-    <p className="booking-intro">{purpose==='event'?'A celebration, a conference, a retreat. Let’s find the right space for you.':'A quiet weekend or a room after the celebration. Tell us when you’re coming.'}</p>
-    <div className="booking-purpose" role="group" aria-label="What would you like to book?">
-      {[['event','Book your event'],['stay','Book a stay']].map(([value,text])=><button key={value} type="button" aria-pressed={purpose===value} onClick={()=>{setPurpose(value);setError('');setWhatsapp('');}}>{text}</button>)}
+    <div className="booking-tabs" role="tablist" aria-label="Plan your visit">
+      {tabs.map(([id,text],index)=><button key={id} type="button" role="tab" id={'quick-tab-'+id} aria-controls={'quick-panel-'+id} aria-selected={active===id} tabIndex={active===id?0:-1} ref={element=>{tabRefs.current[index]=element;}} onClick={()=>chooseTab(id)} onKeyDown={event=>navigateTabs(event,index)}>{text}</button>)}
     </div>
-    <form onSubmit={submit} className="quick-booking">
-      <div className="booking-fields">
-        {purpose==='event'?<>
-          <label htmlFor="visit-event-date">Preferred date<input id="visit-event-date" type="date" required min={today} value={eventDate} onChange={e=>{setEventDate(e.target.value);setWhatsapp('');}}/></label>
-          <label htmlFor="visit-event-guests">Expected guests<input id="visit-event-guests" type="number" required min="1" max="10000" inputMode="numeric" placeholder="Guest count" value={eventGuests} onChange={e=>{setEventGuests(e.target.value);setWhatsapp('');}}/></label>
-          <label htmlFor="visit-event-type">Your occasion<select id="visit-event-type" value={eventType} onChange={e=>{setEventType(e.target.value);setWhatsapp('');}}>{['Help me choose','Wedding or reception','Conference or meeting','Retreat','Birthday or celebration','Other occasion'].map(x=><option key={x}>{x}</option>)}</select></label>
-          <label htmlFor="visit-event-extras">Also needed<select id="visit-event-extras" value={extras} onChange={e=>{setExtras(e.target.value);setWhatsapp('');}}>{['Venue only','Catering','Rooms for guests','Catering and rooms','Let’s discuss'].map(x=><option key={x}>{x}</option>)}</select></label>
-        </>:<>
-        <label htmlFor="stay-check-in">Check-in<input id="stay-check-in" name="checkIn" type="date" required min={today} value={checkIn} onChange={e=>{setCheckIn(e.target.value);setWhatsapp('');}}/></label>
-        <label htmlFor="stay-check-out">Check-out<input id="stay-check-out" name="checkOut" type="date" required min={nextDay} value={checkOut} onChange={e=>{setCheckOut(e.target.value);setWhatsapp('');}}/></label>
-        <label htmlFor="stay-guests">Guests<select id="stay-guests" name="guests" value={guests} onChange={e=>{setGuests(e.target.value);setWhatsapp('');}}>{[1,2,3,4,5,6].map(n=><option key={n} value={n}>{n} {n===1?'guest':'guests'}</option>)}<option value="7 or more">7 or more guests</option></select></label>
-        <label htmlFor="stay-room">Room preference<select id="stay-room" name="room" value={room} onChange={e=>{setRoom(e.target.value);setWhatsapp('');}}><option>Help me choose</option>{rooms.map(name=><option key={name}>{name}</option>)}</select></label>
-        </>}
-      </div>
-      {error&&<p className="form-error" role="alert">{error}</p>}
-      <button className="button gold" type="submit">{purpose==='event'?'Let’s plan on WhatsApp':'Ask about your stay'}</button>
-      <p className="booking-note">Chat directly with our team on WhatsApp. No payment required.</p>
-      {whatsapp&&<p className="booking-fallback" role="status">Your message is ready. <a href={whatsapp} target="_blank" rel="noopener noreferrer">Continue to WhatsApp</a> if it hasn’t opened.</p>}
-    </form>
+    <h2 id="booking-title">Plan with us</h2>
+    <p className="booking-intro">A few details. We’ll reply on WhatsApp.</p>
+    {tabs.map(([id])=><div key={id} id={'quick-panel-'+id} role="tabpanel" aria-labelledby={'quick-tab-'+id} hidden={active!==id}>
+      <form className="quick-booking" data-purpose={id} onSubmit={submit}>
+        <div className="booking-fields">
+          {id==='event' ? <>{select('eventType','Event type',eventTypes,true)}{input('eventDate','Event date','date',{required:true})}{input('eventGuests','Guests','number')}</> : id==='room' ? <>{input('checkIn','Check-in','date',{required:true})}{input('checkOut','Check-out','date',{required:true,min:nextDay})}{select('roomGuests','Guests',guestOptions)}{select('room','Room',['Help me choose',...rooms])}</> : <>{input('tableDate','Date','date',{required:true})}{input('time','Time','time')}{select('tableGuests','Guests',guestOptions,true)}</>}
+        </div>
+        {error&&<p className="form-error" role="alert">{error}</p>}
+        <button className="button gold" type="submit">Continue on WhatsApp</button>
+        <p className="booking-note">We’ll confirm availability and rates with you.</p>
+        {whatsapp&&<p className="booking-fallback" role="status">Your message is ready. <a href={whatsapp} target="_blank" rel="noopener noreferrer">Open WhatsApp</a> if it hasn’t opened.</p>}
+      </form>
+    </div>)}
   </aside>;
 }
 
 export default function HomeHero() {
-  return <section className="hero hero-with-booking">
-    <img src="/assets/images/pool-sunset.jpg" alt="Sunset reflected in the swimming pool at Jubilee" fetchPriority="high" width="1200" height="900"/>
-    <div className="hero-shade"/>
-    <div className="container hero-layout">
-      <div className="hero-copy"><p className="eyebrow">Effurun · Delta State · Nigeria</p><h1>A place to gather,<br/>to celebrate<br/>and to <em>rest.</em></h1><p>For the occasions that bring us together.<br/>And the quiet moments in between.</p><div className="button-row"><a className="button gold" href="/events#enquiry">Plan an Event</a><a className="button outline" href="/rooms">Explore our rooms</a></div></div>
-      <BookingCard/>
-    </div>
-    <div className="hero-bottom container"><span>RETREATS. CELEBRATIONS. CONNECTIONS.</span><span className="hero-caption">A little room to slow down.</span></div>
-  </section>;
+  return <>
+    <section className="hero hero-centered">
+      <img src="/assets/images/pool-sunset.jpg" alt="Sunset reflected in the swimming pool at Jubilee" fetchPriority="high" width="1200" height="900"/>
+      <div className="hero-shade"/>
+      <div className="container centered-hero-content">
+        <p className="eyebrow">Effurun · Delta State · Nigeria</p>
+        <h1>A place to gather,<br/>to celebrate and to <em>rest.</em></h1>
+        <p className="hero-sub">For the occasions that bring us together.<br/>And the quiet moments in between.</p>
+        <div className="button-row"><a className="button gold" href="/events#enquiry">Plan an Event</a><a className="button outline" href="/rooms">Explore our rooms</a></div>
+      </div>
+    </section>
+    <section className="booking-dock" aria-label="Direct enquiries">
+      <div className="container dock-layout">
+        <div className="dock-intro"><SectionLabel number="00">Your visit, thoughtfully planned</SectionLabel><h2>Gather. Dine. Stay.<br/>Let’s bring it together.</h2><p>Owned and managed by the Catholic Diocese of Warri.</p><p>Speak directly with the people at Jubilee, from the first question to the day you arrive.</p></div>
+        <BookingCard/>
+      </div>
+    </section>
+  </>;
 }

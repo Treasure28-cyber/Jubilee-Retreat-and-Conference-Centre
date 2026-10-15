@@ -30,7 +30,13 @@ Page content and metadata are editable React JSX in `src/pages.jsx`. `src/compon
 
 Forms validate details and prepare an enquiry for the visitor to send through WhatsApp. No message is sent automatically, no bookings are confirmed, and no personal data is stored by this site. There is no email backend or payment processing. An email service can be added after the centre provides a verified email address and an approved delivery service.
 
-The home-page hero includes a compact enquiry card (`src/HomeHero.jsx`) with a choice of planning an event or booking a stay. Event enquiries collect the occasion, date, guest count and catering/room needs; stays collect check-in, check-out, guests and room preference. Both validate dates and open a pre-filled WhatsApp message; a continuation link is provided if the browser blocks the new tab. Visitors send the message themselves in WhatsApp. The sticky navbar uses the reusable vector logo in `src/Logo.jsx`, with standalone artwork in `assets/logo.svg` and the matching favicon in `assets/favicon.svg`. Hero, logo and sticky header styles are in `src/booking.css`. Mobile layout and dialog/overscroll safeguards are in `src/mobile-fixes.css`. The floating WhatsApp link (`src/FloatingContact.jsx`) hides when the booking card or footer is visible to avoid duplicate actions and covered content.
+The centered home-page hero is followed by a three-tab enquiry card (`src/HomeHero.jsx`): Plan an Event, Book a Room, Reserve a Table. It crosses the hero seam on desktop and sits in normal flow, overlapping the hero by 48px, at widths up to 900px. Events are selected by default. Tabs support arrow keys, Home and End, and keep entered details when switching. Dates are validated; empty optional fields are omitted from the prepared WhatsApp message. A continuation link is provided if the browser blocks the new tab. Visitors send messages themselves in WhatsApp.
+
+The sticky navbar uses a Cormorant Garamond wordmark and a gold cross-and-arch line mark (`src/Logo.jsx`, `assets/logo.svg` and `assets/favicon.svg`). Headings use Cormorant Garamond; body text uses Source Sans 3. The final visual direction, responsive enquiry card and numbered section labels are styled in `src/jubilee.css`. The preceding `src/booking.css` and `src/mobile-fixes.css` retain shared navbar and iOS dialog/overscroll safeguards. The floating WhatsApp link (`src/FloatingContact.jsx`) hides when the card or footer is visible.
+
+`src/content.js` stores the verified phone, Google listing link, supplied Google rating (4.1 from 989 reviews), and an empty array ready for genuine guest reviews. The homepage shows the rating summary until real reviews are supplied. The same rating is included in the homepage description, Open Graph description and structured data. Per the owner's direction, no email address or second phone number is published. Optional verified contact fields can be added to the configuration later.
+
+`docs/design-directions.md` records separate proposed directions for Jubilee, Carlaw, Tozak and Victory View. Only Jubilee is implemented in this repository.
 
 ## Confirm before public launch
 
@@ -42,4 +48,4 @@ The home-page hero includes a compact enquiry card (`src/HomeHero.jsx`) with a c
 - Room-specific amenities, photos and the preferred spelling of “Royal Suit”.
 - Rights to use supplied photos and the published Instagram handle.
 
-The site omits unverified Google ratings and testimonials, missing email addresses and invented amenities. Supplied photos cover one room, two halls, food, exterior and pool; additional room-specific, lobby and dining-room photography is still needed. No generated images are presented as actual rooms.
+The site omits invented testimonials, missing email addresses and invented amenities. The Google rating and count match the supplied brief and the identified Google hotel listing, and should be periodically checked. Supplied photos cover one room, two halls, food, exterior and pool; additional room-specific, lobby and dining-room photography is still needed. No generated images are presented as actual rooms.

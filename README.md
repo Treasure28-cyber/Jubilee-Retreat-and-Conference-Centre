@@ -38,6 +38,8 @@ The sticky navbar uses a Cormorant Garamond wordmark and a gold cross-and-arch l
 
 `docs/design-directions.md` records separate proposed directions for Jubilee, Carlaw, Tozak and Victory View. Only Jubilee is implemented in this repository.
 
+The shared header and mobile navigation live in `src/Header.jsx`, styled in `src/navigation.css`. The drawer separates experience and information links, highlights the current route, and keeps booking actions visible while the navigation scrolls independently. Native modal-dialog behavior provides focus containment and Escape dismissal; closing restores focus to the menu button.
+
 ## Confirm before public launch
 
 - Telephone, street address, ownership statement and precise map pin.

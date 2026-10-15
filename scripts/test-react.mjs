@@ -19,7 +19,9 @@ if(!process.argv[2]){
   await import(new URL('../dist'+bundle,import.meta.url));
   const settle=()=>new Promise(resolve=>setTimeout(resolve,80));await settle();
   const click=async element=>{assert(element,'Expected interactive element');element.dispatchEvent(new MouseEvent('click',{bubbles:true}));await settle();};
-  await click(document.querySelector('.menu-toggle'));assert(document.querySelector('#mobile-menu').open);assert(document.body.classList.contains('locked'));await click(document.querySelector('.menu-close'));assert(!document.querySelector('#mobile-menu').open);
+  await click(document.querySelector('.menu-toggle'));assert(document.querySelector('#mobile-menu').open);assert(document.body.classList.contains('locked'));
+  const mobileNav=document.querySelector('#mobile-menu .menu-nav');assert.equal(mobileNav.querySelectorAll('a').length,8);assert.equal(mobileNav.querySelectorAll('.menu-group').length,2);const selected=mobileNav.querySelector('[aria-current="page"]');if(route!=='404')assert.equal(selected.getAttribute('href'),route==='home'?'/':'/'+route);assert.equal(document.querySelectorAll('#mobile-menu .menu-action-buttons a').length,2);
+  await click(document.querySelector('.menu-close'));assert(!document.querySelector('#mobile-menu').open);assert(!document.body.classList.contains('locked'));assert.equal(document.activeElement,document.querySelector('.menu-toggle'));
   for(const dialog of document.querySelectorAll('dialog:not([open])'))assert.equal(getComputedStyle(dialog).display,'none','Closed dialogs cannot create blank space');assert.equal(getComputedStyle(document.querySelector('#mobile-menu')).position,'fixed');
   intersectionCallback([{target:document.querySelector('footer'),isIntersecting:true}]);await settle();assert(document.querySelector('.whatsapp').hidden,'Floating contact hides over footer');intersectionCallback([{target:document.querySelector('footer'),isIntersecting:false}]);await settle();assert(!document.querySelector('.whatsapp').hidden);
   if(route==='home'){

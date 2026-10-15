@@ -5,6 +5,7 @@ import './style.css';
 import './booking.css';
 import './mobile-fixes.css';
 import './jubilee.css';
+import './navigation.css';
 const root=document.getElementById('root');
 const path=location.pathname.replace(/\.html$/,'').replace(/\/index$/,'/');
 document.body.className='page-'+(path.replace(/^\/+|\/+$/g,'')||'home');

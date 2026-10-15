@@ -13,7 +13,7 @@ export default function Header({slug}){
   const [open,setOpen]=useState(false);
   function close(){dialog.current.close();}
   function openMenu(){dialog.current.showModal();setOpen(true);document.body.classList.add('locked');}
-  function item(id,text,index){return <a key={id} href={'/'+id} aria-current={slug===id?'page':undefined} onClick={close}><span className="menu-index" aria-hidden="true">{String(index).padStart(2,'0')}</span><span>{text}</span><Chevron/></a>;}
+  function item(id,text){return <a key={id} href={'/'+id} aria-current={slug===id?'page':undefined} onClick={close}><span>{text}</span><Chevron/></a>;}
   return <>
     <header className="site-header"><div className="header-inner">
       <a className="brand" href="/" aria-label="Jubilee home"><Logo/></a>
@@ -29,9 +29,8 @@ export default function Header({slug}){
         </div>
         <div className="menu-scroll">
           <nav className="menu-nav" aria-label="Mobile navigation">
-            <a className="menu-home" href="/" aria-current={slug===''?'page':undefined} onClick={close}><span className="menu-index" aria-hidden="true">00</span><span>Home</span><Chevron/></a>
-            <section className="menu-group" aria-labelledby="menu-experiences"><h2 id="menu-experiences">Your Jubilee experience</h2>{experiences.map(([id,text],index)=>item(id,text,index+1))}</section>
-            <section className="menu-group" aria-labelledby="menu-discover"><h2 id="menu-discover">Discover the centre</h2>{discover.map(([id,text],index)=>item(id,text,index+5))}</section>
+            <a className="menu-home" href="/" aria-current={slug===''?'page':undefined} onClick={close}><span>Home</span><Chevron/></a>
+            {navigation.map(([id,text])=>item(id,text))}
           </nav>
         </div>
         <div className="menu-actions">
